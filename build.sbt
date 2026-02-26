@@ -9,6 +9,26 @@ inThisBuild(
     scalaVersion := V.scala213,
     semanticdbEnabled := true,
     semanticdbVersion := scalafixSemanticdb.revision,
+    githubWorkflowJavaVersions := Seq(JavaSpec.temurin("17")),
+    githubWorkflowBuild := Seq(WorkflowStep.Sbt(List("tests/test"))),
+    githubWorkflowTargetTags ++= Seq("v*"),
+    githubWorkflowPublishTargetBranches := Seq(RefPredicate.StartsWith(Ref.Tag("v"))),
+    githubWorkflowPublish := Seq(
+      WorkflowStep.Run(
+        List(
+          "curl -L https://repo1.maven.org/maven2/com/lihaoyi/mill-dist/1.1.2/mill-dist-1.1.2-mill.sh -o mill",
+          "chmod +x mill",
+          "./mill rules.publishSonatypeCentral"
+        ),
+        name = Some("Publish to Maven Central"),
+        env = Map(
+          "MILL_SONATYPE_USERNAME" -> "${{ secrets.SONATYPE_USERNAME }}",
+          "MILL_SONATYPE_PASSWORD" -> "${{ secrets.SONATYPE_PASSWORD }}",
+          "MILL_PGP_SECRET_BASE64" -> "${{ secrets.PGP_SECRET_BASE64 }}",
+          "MILL_PGP_PASSPHRASE" -> "${{ secrets.PGP_PASSPHRASE }}"
+        )
+      )
+    ),
   )
 )
 
