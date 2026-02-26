@@ -13,6 +13,7 @@ inThisBuild(
     githubWorkflowBuild := Seq(WorkflowStep.Sbt(List("tests/test"))),
     githubWorkflowTargetTags ++= Seq("v*"),
     githubWorkflowPublishTargetBranches := Seq(RefPredicate.StartsWith(Ref.Tag("v"))),
+    githubWorkflowArtifactUpload := false,
     githubWorkflowPublish := Seq(
       WorkflowStep.Run(
         List(
