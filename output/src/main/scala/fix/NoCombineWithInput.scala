@@ -1,6 +1,3 @@
-/*
-rules = NoCombineWith
-*/
 package fix
 
 object NoCombineWithInput {
@@ -31,10 +28,10 @@ object NoCombineWithInput {
   val e2: EventStream[String] = ???
 
   // Should rewrite — instance method calls
-  val bad1 = s1.combineWith(s2)
-  val bad2 = s1.combineWithFn(s2)((a, b) => a.toString + b)
-  val bad3 = e1.combineWith(e2)
-  val bad4 = e1.combineWithFn(e2)((a, b) => a.toString + b)
+  val bad1 = Signal.combine(s1, s2)
+  val bad2 = Signal.combineWithFn(s1, s2)((a, b) => a.toString + b)
+  val bad3 = Signal.combine(e1, e2)
+  val bad4 = Signal.combineWithFn(e1, e2)((a, b) => a.toString + b)
 
   // Should NOT rewrite — Signal companion
   val ok1 = Signal.combine(s1, s2)
