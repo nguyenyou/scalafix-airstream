@@ -56,7 +56,7 @@ object app extends ScalaModule with ScalafixModule {
   def scalaVersion = "3.3.7"
 
   def scalafixIvyDeps = Seq(
-    mvn"io.github.nguyenyou::scalafix-airstream:VERSION"
+    mvn"io.github.nguyenyou::scalafix-airstream:0.1.0"
   )
 }
 ```
@@ -93,7 +93,7 @@ addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.14.6")
 **`build.sbt`**
 
 ```scala
-ThisBuild / scalafixDependencies += "io.github.nguyenyou" %% "scalafix-airstream" % "VERSION"
+ThisBuild / scalafixDependencies += "io.github.nguyenyou" %% "scalafix-airstream" % "0.1.0"
 ```
 
 **`.scalafix.conf`** (same as above)

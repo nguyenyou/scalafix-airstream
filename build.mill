@@ -1,0 +1,28 @@
+package build
+
+import mill._, scalalib._
+import mill.javalib.SonatypeCentralPublishModule
+import mill.javalib.publish._
+
+object rules extends ScalaModule with SonatypeCentralPublishModule {
+  def scalaVersion = "2.13.18"
+  def artifactName = "scalafix-airstream"
+  def publishVersion = "0.1.0"
+
+  def mvnDeps = Seq(
+    mvn"ch.epfl.scala::scalafix-core:0.14.6"
+  )
+
+  def pomSettings = PomSettings(
+    description = "Scalafix rules for Airstream",
+    organization = "io.github.nguyenyou",
+    url = "https://github.com/nguyenyou/scalafix-airstream",
+    licenses = Seq(License.MIT),
+    versionControl = VersionControl.github("nguyenyou", "scalafix-airstream"),
+    developers = Seq(
+      Developer("nguyenyou", "Nguyen Tu", "https://github.com/nguyenyou")
+    )
+  )
+
+  def resources = Task.Sources("src/main/resources")
+}

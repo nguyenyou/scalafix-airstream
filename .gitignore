@@ -1,6 +1,8 @@
 target/
+out/
 .bsp/
 .metals/
 .idea/
 project/metals.sbt
 project/project/
+/mill
