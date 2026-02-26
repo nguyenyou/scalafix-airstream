@@ -7,7 +7,12 @@ import mill.javalib.publish._
 object rules extends ScalaModule with SonatypeCentralPublishModule {
   def scalaVersion = "2.13.18"
   def artifactName = "scalafix-airstream"
-  def publishVersion = "0.1.0"
+
+  def publishVersion = Task {
+    val tag = os.proc("git", "describe", "--tags", "--abbrev=0").call(check = false)
+    val v = tag.out.text().trim.stripPrefix("v")
+    if (v.nonEmpty) v else "0.0.0-SNAPSHOT"
+  }
 
   def mvnDeps = Seq(
     mvn"ch.epfl.scala::scalafix-core:0.14.6"
