@@ -31,25 +31,6 @@ Version is derived from the nearest `v*` git tag (see `build.mill`).
 
 Requires env vars: `MILL_SONATYPE_USERNAME`, `MILL_SONATYPE_PASSWORD`, `MILL_PGP_SECRET_BASE64`, `MILL_PGP_PASSPHRASE`.
 
-## CI / Release
-
-CI is managed by `sbt-github-actions` plugin — do not edit `.github/workflows/` by hand.
-
-```sh
-sbt githubWorkflowGenerate   # regenerate ci.yml and clean.yml after changing build.sbt
-sbt githubWorkflowCheck      # verify workflows are in sync (runs in CI)
-```
-
-To release a new version:
-```sh
-git tag v0.2.0
-git push origin v0.2.0
-```
-
-CI runs tests, then the publish job triggers on `v*` tags and publishes to Maven Central via Mill.
-
-GitHub repo secrets: `SONATYPE_USERNAME`, `SONATYPE_PASSWORD`, `PGP_SECRET_BASE64`, `PGP_PASSPHRASE`.
-
 ## Architecture
 
 - `rules/src/main/scala/fix/` — the scalafix rule (`NoCombineWith.scala`)
@@ -58,9 +39,9 @@ GitHub repo secrets: `SONATYPE_USERNAME`, `SONATYPE_PASSWORD`, `PGP_SECRET_BASE6
 - `tests/src/test/scala/fix/` — scalafix-testkit test suite
 - `output/` — empty (lint-only rule, no rewrite output needed)
 - `examples/mill/` — working Mill example project
-- `build.sbt` — sbt build (testing with scalafix-testkit + sbt-github-actions)
+- `build.sbt` — sbt build (testing with scalafix-testkit)
 - `build.mill` — Mill build (publishing with `SonatypeCentralPublishModule`)
-- `project/plugins.sbt` — sbt plugins (sbt-scalafix, sbt-github-actions)
+- `project/plugins.sbt` — sbt plugins (sbt-scalafix)
 
 ## Key Details
 
