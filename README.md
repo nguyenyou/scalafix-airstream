@@ -6,16 +6,20 @@
 
 ### `NoCombineWith`
 
-Bans instance methods `.combineWith()` and `.combineWithFn()` on `Signal`. Use the companion object methods `Signal.combine()` / `Signal.combineWithFn()` instead.
+Bans instance methods `.combineWith()` and `.combineWithFn()` on `Signal` and `EventStream`. Use the companion object methods instead.
 
 ```scala
 // Bad
-val combined = mySignal.combineWith(otherSignal)
-val mapped = mySignal.combineWithFn(otherSignal)(_ + _)
+signal.combineWith(otherSignal)
+signal.combineWithFn(otherSignal)(_ + _)
+stream.combineWith(otherStream)
+stream.combineWithFn(otherStream)(_ + _)
 
 // Good
-val combined = Signal.combine(mySignal, otherSignal)
-val mapped = Signal.combineWithFn(mySignal, otherSignal)(_ + _)
+Signal.combine(signal, otherSignal)
+Signal.combineWithFn(signal, otherSignal)(_ + _)
+EventStream.combine(stream, otherStream)
+EventStream.combineWithFn(stream, otherStream)(_ + _)
 ```
 
 This is a syntactic rule, so it does not require SemanticDB.
