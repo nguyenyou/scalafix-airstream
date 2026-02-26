@@ -1,0 +1,9 @@
+import mill.*
+import mill.meta.MillBuildRootModule
+import mill.scalalib.*
+
+object `package` extends MillBuildRootModule {
+  override def mvnDeps = Seq(
+    mvn"com.goyeau::mill-scalafix_mill1:0.6.0"
+  )
+}

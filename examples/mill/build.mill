@@ -1,0 +1,12 @@
+package build
+
+import mill._, scalalib._
+import com.goyeau.mill.scalafix.ScalafixModule
+
+object app extends ScalaModule with ScalafixModule {
+  def scalaVersion = "3.3.7"
+
+  def scalafixIvyDeps = Seq(
+    mvn"io.github.nguyenyou::scalafix-airstream:0.1.0-SNAPSHOT"
+  )
+}
