@@ -20,6 +20,8 @@ Signal.combineWithFn(signal, otherSignal)(_ + _)
 
 This is a syntactic rule, so it does not require SemanticDB.
 
+> **`Signal.combine` vs `EventStream.combine`:** These are **not** interchangeable. `Signal.combine` accepts only `SignalSource` arguments and returns a `Signal`, while `EventStream.combine` accepts only `EventSource` arguments and returns an `EventStream`. Use the companion that matches your observable type.
+
 > **Note:** Because it is syntactic, the rule triggers on _any_ `.combineWith` / `.combineWithFn` call regardless of the receiver type. If you have unrelated types with the same method names, suppress with `// scalafix:ok NoCombineWith`.
 
 ## Usage
