@@ -6,23 +6,25 @@
 
 ### `NoCombineWith`
 
-Bans instance methods `.combineWith()` and `.combineWithFn()` on `Signal` and `EventStream`. Use the companion object methods instead.
+Rewrites instance methods `.combineWith()` and `.combineWithFn()` on `Signal` and `EventStream` to companion object methods.
 
 ```scala
-// Bad
+// Before
 signal.combineWith(otherSignal)
 signal.combineWithFn(otherSignal)(_ + _)
-stream.combineWith(otherStream)
-stream.combineWithFn(otherStream)(_ + _)
 
-// Good
+// After
 Signal.combine(signal, otherSignal)
 Signal.combineWithFn(signal, otherSignal)(_ + _)
-EventStream.combine(stream, otherStream)
-EventStream.combineWithFn(stream, otherStream)(_ + _)
 ```
 
 This is a syntactic rule, so it does not require SemanticDB.
+
+The default companion is `Signal`. To use `EventStream`, add to `.scalafix.conf`:
+
+```hocon
+NoCombineWith.defaultCompanion = EventStream
+```
 
 > **Note:** Because it is syntactic, the rule triggers on _any_ `.combineWith` / `.combineWithFn` call regardless of the receiver type. If you have unrelated types with the same method names, suppress with `// scalafix:ok NoCombineWith`.
 
@@ -56,7 +58,7 @@ object app extends ScalaModule with ScalafixModule {
   def scalaVersion = "3.3.7"
 
   def scalafixIvyDeps = Seq(
-    mvn"io.github.nguyenyou::scalafix-airstream:0.1.0"
+    mvn"io.github.nguyenyou::scalafix-airstream:0.2.0"
   )
 }
 ```
@@ -67,16 +69,12 @@ Add `.scalafix.conf` at the project root:
 rules = [
   NoCombineWith
 ]
-
-lint.error = [
-  "NoCombineWith.*"
-]
 ```
 
 Run:
 
 ```sh
-./mill app.fix             # report lint
+./mill app.fix             # apply rewrites
 ./mill app.fix --check     # check only (CI)
 ```
 
@@ -93,7 +91,7 @@ addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.14.6")
 **`build.sbt`**
 
 ```scala
-ThisBuild / scalafixDependencies += "io.github.nguyenyou" %% "scalafix-airstream" % "0.1.0"
+ThisBuild / scalafixDependencies += "io.github.nguyenyou" %% "scalafix-airstream" % "0.2.0"
 ```
 
 **`.scalafix.conf`** (same as above)
@@ -102,16 +100,12 @@ ThisBuild / scalafixDependencies += "io.github.nguyenyou" %% "scalafix-airstream
 rules = [
   NoCombineWith
 ]
-
-lint.error = [
-  "NoCombineWith.*"
-]
 ```
 
 Run:
 
 ```sh
-sbt scalafix             # report lint
+sbt scalafix             # apply rewrites
 sbt 'scalafix --check'   # check only (CI)
 ```
 
