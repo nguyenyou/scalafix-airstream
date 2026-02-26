@@ -24,15 +24,31 @@ This is a syntactic rule, so it does not require SemanticDB.
 
 ## Usage
 
-### Mill (with `mill-scalafix`)
+### Mill (with [`mill-scalafix`](https://github.com/joan38/mill-scalafix))
 
-**`build.mill`**
+Add the plugin dependency in `mill-build/build.mill`:
 
 ```scala
+import mill.*
+import mill.meta.MillBuildRootModule
+import mill.scalalib.*
+
+object `package` extends MillBuildRootModule {
+  override def mvnDeps = Seq(
+    mvn"com.goyeau::mill-scalafix_mill1:0.6.0"
+  )
+}
+```
+
+Mix in `ScalafixModule` and declare the rule dependency in `build.mill`:
+
+```scala
+package build
+
 import mill._, scalalib._
 import com.goyeau.mill.scalafix.ScalafixModule
 
-object myapp extends ScalaModule with ScalafixModule {
+object app extends ScalaModule with ScalafixModule {
   def scalaVersion = "3.3.7"
 
   def scalafixIvyDeps = Seq(
@@ -41,7 +57,7 @@ object myapp extends ScalaModule with ScalafixModule {
 }
 ```
 
-**`.scalafix.conf`**
+Add `.scalafix.conf` at the project root:
 
 ```hocon
 rules = [
@@ -56,9 +72,11 @@ lint.error = [
 Run:
 
 ```sh
-mill myapp.fix       # apply fixes / report lint
-mill myapp.fix --check  # check only (CI)
+./mill app.fix             # report lint
+./mill app.fix --check     # check only (CI)
 ```
+
+See [`examples/mill/`](examples/mill/) for a complete working example.
 
 ### sbt (with `sbt-scalafix`)
 
@@ -89,8 +107,8 @@ lint.error = [
 Run:
 
 ```sh
-sbt scalafix         # apply fixes / report lint
-sbt 'scalafix --check'  # check only (CI)
+sbt scalafix             # report lint
+sbt 'scalafix --check'   # check only (CI)
 ```
 
 ## Development
