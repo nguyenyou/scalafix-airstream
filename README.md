@@ -6,25 +6,19 @@
 
 ### `NoCombineWith`
 
-Rewrites instance methods `.combineWith()` and `.combineWithFn()` on `Signal` and `EventStream` to companion object methods.
+Lints instance methods `.combineWith()` and `.combineWithFn()` on `Signal` and `EventStream`, suggesting companion object methods instead.
 
 ```scala
-// Before
+// Flagged
 signal.combineWith(otherSignal)
 signal.combineWithFn(otherSignal)(_ + _)
 
-// After
+// Preferred
 Signal.combine(signal, otherSignal)
 Signal.combineWithFn(signal, otherSignal)(_ + _)
 ```
 
 This is a syntactic rule, so it does not require SemanticDB.
-
-The default companion is `Signal`. To use `EventStream`, add to `.scalafix.conf`:
-
-```hocon
-NoCombineWith.defaultCompanion = EventStream
-```
 
 > **Note:** Because it is syntactic, the rule triggers on _any_ `.combineWith` / `.combineWithFn` call regardless of the receiver type. If you have unrelated types with the same method names, suppress with `// scalafix:ok NoCombineWith`.
 
@@ -58,7 +52,7 @@ object app extends ScalaModule with ScalafixModule {
   def scalaVersion = "3.3.7"
 
   def scalafixIvyDeps = Seq(
-    mvn"io.github.nguyenyou::scalafix-airstream:0.2.0"
+    mvn"io.github.nguyenyou::scalafix-airstream:0.3.0"
   )
 }
 ```
@@ -74,7 +68,6 @@ rules = [
 Run:
 
 ```sh
-./mill app.fix             # apply rewrites
 ./mill app.fix --check     # check only (CI)
 ```
 
@@ -91,7 +84,7 @@ addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.14.6")
 **`build.sbt`**
 
 ```scala
-ThisBuild / scalafixDependencies += "io.github.nguyenyou" %% "scalafix-airstream" % "0.2.0"
+ThisBuild / scalafixDependencies += "io.github.nguyenyou" %% "scalafix-airstream" % "0.3.0"
 ```
 
 **`.scalafix.conf`** (same as above)
@@ -105,7 +98,6 @@ rules = [
 Run:
 
 ```sh
-sbt scalafix             # apply rewrites
 sbt 'scalafix --check'   # check only (CI)
 ```
 

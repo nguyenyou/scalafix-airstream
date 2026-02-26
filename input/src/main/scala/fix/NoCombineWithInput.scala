@@ -30,17 +30,25 @@ object NoCombineWithInput {
   val e1: EventStream[Int] = ???
   val e2: EventStream[String] = ???
 
-  // Should rewrite — instance method calls
-  val bad1 = s1.combineWith(s2)
-  val bad2 = s1.combineWithFn(s2)((a, b) => a.toString + b)
-  val bad3 = e1.combineWith(e2)
-  val bad4 = e1.combineWithFn(e2)((a, b) => a.toString + b)
+  // Should lint — instance method calls
+  val bad1 = s1.combineWith(s2) /* assert: NoCombineWith
+             ^^^^^^^^^^^^^^
+Use Signal.combine or EventStream.combine instead of .combineWith */
+  val bad2 = s1.combineWithFn(s2)((a, b) => a.toString + b) /* assert: NoCombineWith
+             ^^^^^^^^^^^^^^^^
+Use Signal.combineWithFn or EventStream.combineWithFn instead of .combineWithFn */
+  val bad3 = e1.combineWith(e2) /* assert: NoCombineWith
+             ^^^^^^^^^^^^^^
+Use Signal.combine or EventStream.combine instead of .combineWith */
+  val bad4 = e1.combineWithFn(e2)((a, b) => a.toString + b) /* assert: NoCombineWith
+             ^^^^^^^^^^^^^^^^
+Use Signal.combineWithFn or EventStream.combineWithFn instead of .combineWithFn */
 
-  // Should NOT rewrite — Signal companion
+  // Should NOT lint — Signal companion
   val ok1 = Signal.combine(s1, s2)
   val ok2 = Signal.combineWithFn(s1, s2)((a, b) => a.toString + b)
 
-  // Should NOT rewrite — EventStream companion
+  // Should NOT lint — EventStream companion
   val ok3 = EventStream.combine(e1, e2)
   val ok4 = EventStream.combineWithFn(e1, e2)((a, b) => a.toString + b)
 }

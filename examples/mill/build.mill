@@ -7,6 +7,6 @@ object app extends ScalaModule with ScalafixModule {
   def scalaVersion = "3.3.7"
 
   def scalafixIvyDeps = Seq(
-    mvn"io.github.nguyenyou::scalafix-airstream:0.2.0"
+    mvn"io.github.nguyenyou::scalafix-airstream:0.3.0"
   )
 }
